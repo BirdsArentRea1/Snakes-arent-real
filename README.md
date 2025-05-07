@@ -1,1 +1,2 @@
-# Snakes-arent-real
+# Snakes arent real!
+basic snake game using pygame
