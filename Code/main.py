@@ -38,12 +38,18 @@ def spawn_apple():
     y = random.randint(0, (screen_height - grid_size) // grid_size) * grid_size
     return x, y
 
+def draw_score(score):
+    font = pygame.font.SysFont(None, 36)
+    text = font.render(f"Score: {score}", True, (255, 255, 255))
+    screen.blit(text, (10, 10))
+
 # Game loop ######################################################################
 def game_loop():
     global player_x, player_y, direction
     running = True
 
     apple_x, apple_y = spawn_apple()
+    score = 0
 
     while running:  
         screen.fill((0, 0, 0))
@@ -74,9 +80,12 @@ def game_loop():
 
         if player_x == apple_x and player_y == apple_y:
             apple_x, apple_y = spawn_apple()
+            score += 1
             # GROW SNAKE HERE
 
         pygame.draw.rect(screen, apple_color, (apple_x, apple_y, apple_size, apple_size))
+
+        draw_score(score)
 
         screen.blit(player_image, (player_x, player_y))
         pygame.display.flip()
