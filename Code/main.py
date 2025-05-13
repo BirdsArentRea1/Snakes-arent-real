@@ -18,10 +18,32 @@ player_x = screen_width // 2
 player_y = screen_height // 2
 direction = (0, 0)
 
+apple_color = (255, 0, 0)
+apple_size = grid_size
+
+
+def collision(x, y):
+    return x < 0 or x >= screen_width or y < 0 or y >= screen_height
+
+def death_screen():
+    font = pygame.font.SysFont(None, 72)
+    text = font.render("Game Over!", True, (255, 0, 0))
+    screen.fill((0, 0, 0))
+    screen.blit(text, ((screen_width - text.get_width()) // 2, (screen_height - text.get_height()) // 2))
+    pygame.display.flip()
+    pygame.time.delay(2000)
+
+def spawn_apple():
+    x = random.randint(0, (screen_width - grid_size) // grid_size) * grid_size
+    y = random.randint(0, (screen_height - grid_size) // grid_size) * grid_size
+    return x, y
+
 # Game loop ######################################################################
 def game_loop():
     global player_x, player_y, direction
     running = True
+
+    apple_x, apple_y = spawn_apple()
 
     while running:  
         screen.fill((0, 0, 0))
@@ -44,6 +66,17 @@ def game_loop():
             
         player_x += direction[0]
         player_y += direction[1]
+
+        if collision(player_x, player_y):
+            death_screen()
+            running = False
+            continue
+
+        if player_x == apple_x and player_y == apple_y:
+            apple_x, apple_y = spawn_apple()
+            # GROW SNAKE HERE
+
+        pygame.draw.rect(screen, apple_color, (apple_x, apple_y, apple_size, apple_size))
 
         screen.blit(player_image, (player_x, player_y))
         pygame.display.flip()
